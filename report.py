@@ -115,15 +115,14 @@ def generate_report(papers):
 
     一、领域归类 (Index Section)
     按领域（如：伽马射线暴、超新星、宇宙射线、黑洞等）分类，在每个类别后列出对应的论文编号。
-    格式示例：领域名称：[1], [5]
+    格式示例：伽马射线暴：[1], [5]。编号超链接至论文条目中的编号。
 
     二、论文条目 (Details Section)
-    按编号顺序排列所有 {len(papers)} 篇论文。
-    每篇格式：
+    按编号顺序排列所有 {len(papers)} 篇论文。每篇论文严格按照以下格式：
     [编号] 带有链接的Entry ID。示例: [1]: https://arxiv.org/abs/xxxx.xxxxx
-    英文标题
-    中文标题
-    作者：原始作者姓名。最多显示前十位作者，超过部分显示为 "et al."
+    英文标题：英文标题。
+    中文标题：中文标题（请翻译英文标题，保持学术严谨）
+    作者：原始作者姓名。如果作者数量超过 10 位，超过部分显示为 "et al."。示例: A. Einstein, N. Bohr, M. Curie, et al.
     研究方法：需判定为 [Observation] / [Simulation] / [Theory] / [Modeling] 之一。请直接描述核心方法，使用 2-3 句地道的中文学术表达。保留希腊字母和物理符号。
     物理结果：严禁使用‘本文研究了...’这种废话。请直接描述物理发现，使用 2-3 句地道的中文学术表达。保留希腊字母和物理符号。
 
@@ -169,7 +168,8 @@ def save_html(papers, report, provider):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {{ font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: auto; padding: 20px; }}
+        body {{ font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", sans-serif; color: #333; max-width: 900px; margin: auto; padding: 20px; }}
+        body, p, li {{ line-height: 1.4; }}
         .header {{ background: #004085; color: white; padding: 20px; border-radius: 10px; text-align: center; }}
         .index-box {{ background: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; border-radius: 8px; margin: 20px 0; }}
         .paper-item {{ border-bottom: 1px solid #eee; padding: 15px 0; }}
@@ -186,7 +186,7 @@ def save_html(papers, report, provider):
     </body>
     </html>"""
     
-    filename = f"arXiv_astro_ph_HE_daily_report_{date_str}.html"
+    filename = f"./reports/arXiv_astro_ph_HE_daily_report_{date_str}.html"
     with open(filename, "w", encoding="utf-8-sig") as f:
         f.write(html_layout)
     print(f"✨ Sync version of daily report (Index + Details) generated: {filename}")

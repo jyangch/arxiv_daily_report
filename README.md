@@ -36,7 +36,7 @@ export GEMINI_API_KEY="your_api_key_here"
 python report.py
 ```
 
-An HTML report will be generated in the current directory, e.g. `arXiv_astro_ph_HE_daily_report_2026-03-13.html`.
+An HTML report will be generated in the current directory.
 
 ## Output Structure
 
