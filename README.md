@@ -1,59 +1,51 @@
-# -arxiv-ai-
-Arxiv-AI-Reporter: 专业天体物理日报自动生成器
-Arxiv-AI-Reporter 是一个专为天文从业者和爱好者设计的自动化情报工具。它不仅仅是翻译，更是通过 AI 模拟资深科学家的视角，对每日更新的 astro-ph.ga（星系物理）论文进行深度扫描、分类索引并生成可以直接发布在公众号、知乎、小红书等平台的HTML简报。
+# arXiv High-Energy Astrophysics Daily Report Generator
 
-GA_Sync_Report_2026-03-12.pdf 为2025.3.12的arxiv星系文章报告的样例。
+Automatically fetches the latest papers from the arXiv `astro-ph.HE` (High Energy Astrophysical Phenomena) category, uses a large language model to generate a structured academic digest, and exports it as an HTML report.
 
-✨ 核心亮点
-📅 严格公告周期同步：自动模拟 arXiv 官方公告窗口（美国东部时间 14:00 截断），确保生成的报告与官网 New 列表在篇数和内容上 1:1 精准对齐。
+## Features
 
-🎓 学术大牛自动识别：内置资深学者图谱，自动识别并高亮领域顶尖 PI（如 Norman Murray, Luis Ho, Sunyaev 等），助你一眼锁定重磅研究。
+- Fetches newly submitted papers based on arXiv's submission sync window (US Eastern Time)
+- Classifies papers by research topic (e.g., GRBs, black holes, supernovae, cosmic rays)
+- Generates Chinese-language summaries for each paper, including research method tags and key physical findings
+- Supports both Gemini and OpenAI backends with automatic fallback on quota errors
+- Outputs a styled, self-contained HTML report
 
-🍱 结构化双层排版：
+## Installation
 
-一、领域归类索引：快速了解今日 AGN、星系演化、引力理论等子领域的更新热度 。
+```bash
+pip install arxiv pytz google-genai openai
+```
 
-二、论文条目详情：包含中文标题、作者高亮、方法标签及 2-3 句深度物理总结 。
+## Configuration
 
-📱 多端适配输出：生成的 HTML 采用内联样式，支持一键粘贴至微信公众号，且对移动端阅读进行了专门优化。
+Set API keys and models via environment variables (all optional, defaults provided):
 
-🚀 快速开始
-1. 环境准备
+| Variable | Description | Default |
+|---|---|---|
+| `GEMINI_API_KEY` | Google Gemini API key | — |
+| `GEMINI_MODEL` | Gemini model name | `xxx` |
+| `OPENAI_API_KEY` | OpenAI API key | — |
+| `OPENAI_MODEL` | OpenAI model name | `xxx` |
 
-确保你的环境中已安装 Python 3.8+，并安装必要依赖：
+The preferred LLM provider can be set via `PREFERRED_PROVIDER` at the top of `report.py` (`"gemini"` or `"openai"`).
 
-Bash
-pip install arxiv openai pytz
-2. 配置 API
+## Usage
 
-在脚本中配置你的 API Key 和 Base URL：
+```bash
+export GEMINI_API_KEY="your_api_key_here"
+python report.py
+```
 
-Python
-MY_API_KEY = "你的_API_KEY"
-MY_BASE_URL = "你的_API_代理地址"
-MY_MODEL = "claude-3-5-sonnet-20240620" # 建议使用 Sonnet 以获得最佳速度/智能比
-3. 运行
+An HTML report will be generated in the current directory, e.g. `arXiv_astro_ph_HE_daily_report_2026-03-13.html`.
 
-Bash
-python daily_arxiv.py
-运行结束后，你会得到一个名为 GA_Daily_YYYY-MM-DD.html 的文件。
+## Output Structure
 
-🎨 简报预览
+The HTML report contains two sections:
 
-[18] Abell 402中央星系中心的千秒差距尺度恒星空腔
-作者：Michael McDonald ★(Famous Scholar), ... Priyamvada Natarajan ★(Famous Scholar)
-研究方法：Observation
+1. **Topic Index** — papers grouped by research area, with reference numbers
+2. **Paper Details** — for each paper: bilingual title (English + Chinese), authors, method tag (`Observation` / `Simulation` / `Theory` / `Modeling`), and a concise Chinese description of the physical results
 
-核心物理结果：JWST/NIRCam 揭示了 Abell 402 中心星系存在 2 kpc 尺度的恒星密度空腔，推断存在质量高达 6×10 
-10 M⊙的超巨质量黑洞，可能是目前已知最重的双黑洞系统之一。
+## Notes
 
-🛠️ 项目结构
-daily_arxiv.py: 主逻辑脚本，包含时区计算、数据抓取与 AI 调用。
-
-outputs/: 存放每日生成的 HTML 报告。
-
-License: MIT
-
-💡为什么需要这个工具？
-
-在信息爆炸的时代，天文研究者每天面临几十篇新论文。这个工具的存在不是为了替代阅读，而是为了降低筛选成本。它帮你把 1 小时的刷 arXiv 时间缩短到 5 分钟，把精力留给真正需要精读的论文。
+- arXiv does not publish new submissions on weekends; running on Saturday or Sunday will return no results
+- On Mondays, the script automatically retrieves papers from the preceding Friday to account for the weekend gap
